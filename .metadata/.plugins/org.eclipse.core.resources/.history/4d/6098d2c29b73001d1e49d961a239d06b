@@ -1,0 +1,6 @@
+package com.linkcode.userregister.controller;
+
+@RestController
+public class HelloController {
+
+}

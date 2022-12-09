@@ -1,0 +1,49 @@
+package com.linkcode.authorizationServer.service;
+
+import java.util.List;
+import java.util.Set;
+
+import javax.transaction.Transactional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
+
+import com.linkcode.authorizationServer.model.User;
+import com.linkcode.authorizationServer.model.UserRole;
+import com.linkcode.authorizationServer.repository.UserRepository;
+
+@Service
+@Transactional
+public class CustomUserDetailService implements UserDetailsService{
+
+	@Autowired
+	private UserRepository userRepo;
+	
+	
+	@Override
+	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+		User user=userRepo.findByEmail(username);
+		if(user==null) {
+			throw new UsernameNotFoundException(username);
+		}
+		return org.springframework.security.core.userdetails.User(
+				user.getEmail(),
+				user.getPassword(),
+				user.isEnable(),
+				true,
+				true,
+				true,
+				getAuthorities(Set.of(user.getUserrole()))
+				);
+	}
+
+
+	private Collection<?> getAuthorities(Set<UserRole> of) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}
